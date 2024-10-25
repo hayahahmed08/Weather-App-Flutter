@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
               // Background image with decreased opacity
               Positioned.fill(
                 child: Opacity(
-                  opacity: 0.95,
+                  opacity: 1,
                   child: Image(
                     image: AssetImage('assets/backgrounds/splashscreenbg.gif'),
                     fit: BoxFit.cover,
@@ -48,6 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         style: TextStyle(
                           fontSize: 90,
                           fontFamily: 'Serif',
+                          fontWeight: FontWeight.w300,
                           color: Color(0xFF763645),
                         ),
                       ),
