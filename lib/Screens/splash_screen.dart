@@ -18,10 +18,10 @@ class _SplashScreenState extends State<SplashScreen> {
               // Background image with decreased opacity
               Positioned.fill(
                 child: Opacity(
-                  opacity: 0.5, // Set your desired opacity value (0.0 to 1.0)
+                  opacity: 0.95,
                   child: Image(
                     image: AssetImage('assets/backgrounds/splashscreenbg.gif'),
-                    fit: BoxFit.cover, // Cover the entire screen
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
