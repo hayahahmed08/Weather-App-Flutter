@@ -1,12 +1,12 @@
-
-
 class AppUrl {
-  //this is our base URL
-  // This holds the root of the API URL, making it easy to change if the base changes.
-  static const String baseURL = "https://api.openweathermap.org/data/2.5/";
-  //End point for fetching weather data by city
-  static String getWeatherbyCity(String cityName, String apikey) {
-    return "${baseURL}weather?q=$cityName&appid=$apikey";
-    //This method takes cityName and apiKey as parameters and constructs the full endpoint URL, making it reusable and flexible for various cities.
+  // Base URL for the OpenWeatherMap API
+  static const String baseUrl = "https://api.openweathermap.org/data/2.5/";
+
+  // Replace {cityName} with the city name of your choice and add your actual API key here
+  static const String apiKey = "14dfa869afcd21482222a7e0a94e83dd";
+
+  // Fetch weather data by city name
+  static String weatherByCity(String cityName) {
+    return "$baseUrl/weather?q=$cityName&appid=$apiKey";
   }
 }
