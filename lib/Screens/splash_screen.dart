@@ -51,152 +51,162 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             SafeArea(
               child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text.rich(
-                      TextSpan(
-                        text: 'we',
-                        style: TextStyle(
-                          fontSize: 60,
+                child: SingleChildScrollView( // Added to prevent overflow
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text.rich(
+                        TextSpan(
+                          text: 'we',
+                          style: TextStyle(
+                            fontSize: 60,
+                            fontFamily: 'Serif',
+                            color: Colors.white,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: '  ther\n',
+                              style: TextStyle(
+                                fontSize: 55,
+                                fontFamily: 'Serif',
+                              ),
+                            ),
+                            TextSpan(
+                              text: ' \t\tA',
+                              style: TextStyle(
+                                fontSize: 90,
+                                fontFamily: 'Serif',
+                                fontWeight: FontWeight.w300,
+                                color: Color(0xFF763645),
+                              ),
+                            ),
+                            TextSpan(
+                              text: 'pp\n',
+                              style: TextStyle(
+                                fontSize: 50,
+                                fontFamily: 'Serif',
+                              ),
+                            ),
+                          ],
+                        ),
+                        strutStyle: StrutStyle(
                           fontFamily: 'Serif',
-                          color: Colors.white,
+                          fontSize: 30,
+                          forceStrutHeight: true,
                         ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: '  ther\n',
-                            style: TextStyle(
-                              fontSize: 55,
-                              fontFamily: 'Serif',
-                            ),
-                          ),
-                          TextSpan(
-                            text: ' \t\tA',
-                            style: TextStyle(
-                              fontSize: 90,
-                              fontFamily: 'Serif',
-                              fontWeight: FontWeight.w300,
-                              color: Color(0xFF763645),
-                            ),
-                          ),
-                          TextSpan(
-                            text: 'pp\n',
-                            style: TextStyle(
-                              fontSize: 50,
-                              fontFamily: 'Serif',
-                            ),
-                          ),
-                        ],
                       ),
-                      strutStyle: StrutStyle(
-                        fontFamily: 'Serif',
-                        fontSize: 30,
-                        forceStrutHeight: true,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      width: 300,
-                      child: TextFormField(
-                        controller: searchController,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 15),
-                          hintText: 'Search city',
-                          hintStyle: TextStyle(color: Colors.white70),
-                          filled: true,
-                          fillColor: Colors.black.withOpacity(0.2),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(50.0),
-                            borderSide: BorderSide(color: Colors.white70),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(50.0),
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: Colors.white70,
-                          ),
-                        ),
-                        style: TextStyle(color: Colors.white),
-                        onChanged: (value) {
-                          setState(() {
-                            filteredlist = value.isEmpty
-                                ? []
-                                : citylist
-                                    .where((city) => city
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase()))
-                                    .toList();
-                          });
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    if (filteredlist.isNotEmpty)
+                      const SizedBox(height: 10),
                       Container(
-                        height: 260,
                         width: 300,
-                        child: ListView.builder(
-                          itemCount: filteredlist.length,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Colors.white.withOpacity(0.3),
-                              ),
-                              child: ListTile(
-                                dense: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 4),
-                                title: Text(
-                                  filteredlist[index],
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
-                                ),
-                              ),
-                            );
+                        child: TextFormField(
+                          controller: searchController,
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 15),
+                            hintText: 'Search city',
+                            hintStyle: const TextStyle(color: Colors.white70),
+                            filled: true,
+                            fillColor: Colors.black.withOpacity(0.2),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50.0),
+                              borderSide: const BorderSide(color: Colors.white70),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50.0),
+                              borderSide: const BorderSide(color: Colors.white),
+                            ),
+                            prefixIcon: const Icon(
+                              Icons.search,
+                              color: Colors.white70,
+                            ),
+                          ),
+                          style: const TextStyle(color: Colors.white),
+                          onChanged: (value) {
+                            setState(() {
+                              filteredlist = value.isEmpty
+                                  ? []
+                                  : citylist
+                                  .where((city) => city
+                                  .toLowerCase()
+                                  .contains(value.toLowerCase()))
+                                  .toList();
+                            });
                           },
                         ),
                       ),
-                    SizedBox(height: 20),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WeatherScreen()),
-                        );
-                      },
-                      child: Container(
-                        height: 50,
-                        width: 120,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(
-                              sigmaX: 10,
-                              sigmaY: 10,
-                            ),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Color(0xFF763645).withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(15),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.2),
+                      const SizedBox(height: 10),
+                      if (filteredlist.isNotEmpty)
+                        Container(
+                          height: 260,
+                          width: 300,
+                          child: ListView.builder(
+                            itemCount: filteredlist.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  // Update the search bar with the selected city
+                                  searchController.text = filteredlist[index];
+                                  filteredlist = []; // Clear the filtered list
+                                  setState(() {}); // Refresh the UI
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.white.withOpacity(0.3),
+                                  ),
+                                  child: ListTile(
+                                    dense: true,
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                                    title: Text(
+                                      filteredlist[index],
+                                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                                    ),
+                                  ),
                                 ),
+                              );
+                            },
+                          ),
+                        ),
+                      const SizedBox(height: 20),
+                      GestureDetector(
+                        onTap: () {
+                          if (searchController.text.isNotEmpty) { // Updated condition
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => WeatherScreen(cityName: searchController.text),
                               ),
-                              child: Center(
-                                child: Text(
-                                  "Search",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: "Serif",
-                                    fontSize: 20,
+                            );
+                          }
+                        },
+                        child: Container(
+                          height: 50,
+                          width: 120,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(
+                                sigmaX: 10,
+                                sigmaY: 10,
+                              ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF763645).withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(15),
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(0.2),
+                                  ),
+                                ),
+                                child: const Center(
+                                  child: Text(
+                                    "Search",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: "Serif",
+                                      fontSize: 20,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -204,8 +214,8 @@ class _SplashScreenState extends State<SplashScreen> {
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
