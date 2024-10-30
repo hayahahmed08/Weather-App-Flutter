@@ -1,5 +1,7 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:weatherapp/Services/weather_services.dart';
+import 'package:weatherapp/Screens/weather_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -124,10 +126,10 @@ class _SplashScreenState extends State<SplashScreen> {
                             filteredlist = value.isEmpty
                                 ? []
                                 : citylist
-                                .where((city) => city
-                                .toLowerCase()
-                                .contains(value.toLowerCase()))
-                                .toList();
+                                    .where((city) => city
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase()))
+                                    .toList();
                           });
                         },
                       ),
@@ -161,6 +163,48 @@ class _SplashScreenState extends State<SplashScreen> {
                           },
                         ),
                       ),
+                    SizedBox(height: 20),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WeatherScreen()),
+                        );
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 120,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(
+                              sigmaX: 10,
+                              sigmaY: 10,
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Color(0xFF763645).withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.2),
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Search",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: "Serif",
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
