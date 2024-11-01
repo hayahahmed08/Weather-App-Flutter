@@ -38,6 +38,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   http: ^1.2.2
+  intl: ^0.19.0
 
 
 dev_dependencies:
@@ -101,7 +102,12 @@ fonts:
       - family: UncialAntiqua-Regular
         fonts:
          - asset: fonts/UncialAntiqua-Regular.ttf
-         - asset: fonts/TrajanPro_Bold.ttf
+
+      - family: Roboto-Medium.ttf
+        fonts:
+          - asset: fonts/Roboto-Medium.ttf
+
+
 
   #
   # For details regarding fonts from package dependencies,

@@ -3,6 +3,8 @@ import 'package:weatherapp/Services/Utilities/app_url.dart';
 import 'package:weatherapp/Model/model_class.dart';
 import 'package:flutter/services.dart'; // Added for rootBundle
 import 'dart:convert';
+import 'package:weatherapp/Model/forecast_model_class.dart';
+
 
 class WeatherServices {
 
@@ -13,6 +15,17 @@ class WeatherServices {
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       return ModelClass.fromJson(data);
+    } else {
+      throw Exception('Error: Failed to load weather data');
+    }
+  }
+
+  Future<Forecast> fetchForecast(String cityName) async {
+    final response = await http.get(Uri.parse(AppUrl.forecastbyCity(cityName)));
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      return Forecast.fromJson(data);
     } else {
       throw Exception('Error: Failed to load weather data');
     }

@@ -9,4 +9,8 @@ class AppUrl {
   static String weatherByCity(String cityName) {
     return "$baseUrl/weather?q=$cityName&appid=$apiKey";
   }
+
+  static String forecastbyCity(String cityName){
+      return "$baseUrl/forecast?q=$cityName&appid=$apiKey";
+  }
 }

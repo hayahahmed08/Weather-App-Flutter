@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:weatherapp/Services/weather_services.dart';
 import 'package:weatherapp/Model/model_class.dart';
+import 'package:intl/intl.dart';
+im
 
 class WeatherScreen extends StatelessWidget {
   final String cityName;
@@ -23,11 +25,30 @@ class WeatherScreen extends StatelessWidget {
             final weatherData = snapshot.data!;
             final mainWeather = weatherData.weather![0].main;
 
+
+
             final backgroundImage =
                 weatherImages[mainWeather] ?? 'assets/backgrounds/clear.gif';
 
             final weatherIcon =
                 weatherIcons[mainWeather] ?? 'assets/icons/tornado.png';
+
+            final tempInKelvin = weatherData.main?.temp ?? 0;
+            final tempInCelsius = (tempInKelvin - 273).toInt();
+
+            final time = weatherData.timezone ?? 0;
+            final now = DateTime.now().toUtc().add(Duration(seconds: time));
+            final formattedDate = DateFormat('dd MMM yyyy').format(now);
+            final dayName = DateFormat('EEEE').format(now);
+
+            // Generate the dates for the next 5 days
+            List<DateTime> nextFiveDays = [
+              now.add(Duration(days: 1)),
+              now.add(Duration(days: 2)),
+              now.add(Duration(days: 3)),
+              now.add(Duration(days: 4)),
+              now.add(Duration(days: 5)),
+            ];
 
             return Stack(
               children: [
@@ -36,7 +57,7 @@ class WeatherScreen extends StatelessWidget {
                   child: SizedBox.expand(
                     child: Image.asset(
                       backgroundImage,
-                                         fit: BoxFit.cover,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -63,35 +84,57 @@ class WeatherScreen extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 100),
                     child: Column(
-                    //  mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           mainWeather!,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 24,
-                          //  fontWeight: FontWeight.bold,
+                            fontFamily: 'UncialAntiqua-Regular',
+                            fontWeight: FontWeight.normal,
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 5),
                         Image.asset(
                           weatherIcon,
                           height: 120,
                           width: 120,
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 2),
                         Text(
-                          "Temperature: ${weatherData.main?.temp}°C",
+                          "${tempInCelsius}°C",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 70,
+                            fontFamily: 'Roboto-Medium.ttf',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          "${dayName} | ${formattedDate}",
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
-                            fontWeight: FontWeight.bold,
                           ),
                         ),
+                        const SizedBox(height: 30),
+
                       ],
                     ),
                   ),
                 ),
+                ListView.builder(
+                  itemCount: nextFiveDays.length,
+                  itemBuilder: (BuildContext context , int index){
+                    DateTime day = nextFiveDays[index];
+                    String dayName = DateFormat('EEE').format(day);
+
+                    return Container(
+
+
+                    )
+                  },
+                )
               ],
             );
           }
@@ -100,6 +143,8 @@ class WeatherScreen extends StatelessWidget {
     );
   }
 }
+
+
 
 final Map<String, String> weatherImages = {
   "Thunderstorm": "assets/backgrounds/thunderstorm.gif",
