@@ -21,49 +21,76 @@ class WeatherScreen extends StatelessWidget {
             return const Center(child: Text("Error fetching weather data"));
           } else {
             final weatherData = snapshot.data!;
-                       return Stack(
+            final mainWeather = weatherData.weather![0].main;
+
+            final backgroundImage =
+                weatherImages[mainWeather] ?? 'assets/backgrounds/clear.gif';
+
+            final weatherIcon =
+                weatherIcons[mainWeather] ?? 'assets/icons/tornado.png';
+
+            return Stack(
               children: [
-                SizedBox.expand(
-                  child: Image.asset(
-                    'assets/backgrounds/splashscreenbg.gif',
-                    fit: BoxFit.cover,
+                Opacity(
+                  opacity: 0.8,
+                  child: SizedBox.expand(
+                    child: Image.asset(
+                      backgroundImage,
+                                         fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 40),
+                Positioned(
+                  top: 50,
+                  left: 10,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(
-                        Icons.location_on,
-                        color: Colors.white70,
-                      ),
-                      const SizedBox(width: 8),
+                      const Icon(Icons.location_on, color: Colors.white),
+                      const SizedBox(width: 5),
                       Text(
-                        '$cityName',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        cityName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontFamily: 'UncialAntiqua-Regular',
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 100),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "${weatherData.weather![0].main}",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 100),
+                    child: Column(
+                    //  mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          mainWeather!,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                          //  fontWeight: FontWeight.bold,
                           ),
-
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 20),
+                        Image.asset(
+                          weatherIcon,
+                          height: 120,
+                          width: 120,
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          "Temperature: ${weatherData.main?.temp}°C",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ],
             );
@@ -74,21 +101,38 @@ class WeatherScreen extends StatelessWidget {
   }
 }
 
-
 final Map<String, String> weatherImages = {
   "Thunderstorm": "assets/backgrounds/thunderstorm.gif",
   "Drizzle": "assets/backgrounds/drizzle.gif",
   "Rain": "assets/backgrounds/rain.gif",
-  "Snow": "assets/images/snow.png",
+  "Snow": "assets/backgrounds/snow.gif",
   "Mist": "assets/backgrounds/mist.gif",
-  "Smoke": "assets/backgrounds/mist.gif",
-  "Haze": "assets/backgrounds/mist.gif",
-  "Dust": "assets/images/dust.png",
-  "Fog": "assets/images/fog.png",
-  "Sand": "assets/images/sand.png",
-  "Ash": "assets/images/ash.png",
-  "Squall": "assets/images/squall.png",
-  "Tornado": "assets/images/tornado.png",
-  "Clear": "assets/images/clear.png",
-  "Clouds": "assets/images/clouds.png",
+  "Smoke": "assets/backgrounds/smoke.gif",
+  "Haze": "assets/backgrounds/haze.gif",
+  "Dust": "assets/backgrounds/dust.gif",
+  "Fog": "assets/backgrounds/fog.gif",
+  "Sand": "assets/backgrounds/sand.gif",
+  "Ash": "assets/backgrounds/ash.gif",
+  "Squall": "assets/backgrounds/squall.gif",
+  "Tornado": "assets/backgrounds/tornado.gif",
+  "Clear": "assets/backgrounds/clear.gif",
+  "Clouds": "assets/backgrounds/clouds.gif",
+};
+
+final Map<String, String> weatherIcons = {
+  "Thunderstorm": "assets/icons/thunderstorm.png",
+  "Drizzle": "assets/icons/drizzle.png",
+  "Rain": "assets/icons/rain.png",
+  "Snow": "assets/icons/snow.png",
+  "Mist": "assets/icons/mist.png",
+  "Smoke": "assets/icons/smoke.png",
+  "Haze": "assets/icons/haze.png",
+  "Dust": "assets/icons/dust.png",
+  "Fog": "assets/icons/fog.png",
+  "Sand": "assets/icons/sand.png",
+  "Ash": "assets/icons/ash.png",
+  "Squall": "assets/icons/squall.png",
+  "Tornado": "assets/icons/tornado.png",
+  "Clear": "assets/icons/clear.png",
+  "Clouds": "assets/icons/clouds.png",
 };

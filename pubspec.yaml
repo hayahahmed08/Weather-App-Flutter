@@ -68,6 +68,28 @@ flutter:
   assets:
      - assets/backgrounds/splashscreenbg.gif
      - assets/cities.json
+#     - assets/backgrounds/tornado.gif
+#     - assets/backgrounds/thunderstorm.gif
+#     - assets/backgrounds/snow.gif
+#     - assets/backgrounds/rain.gif
+#     - assets/backgrounds/mist.gif
+#     - assets/backgrounds/dust.gif
+#     - assets/backgrounds/drizzle.gif
+#     - assets/backgrounds/clouds.gif
+     - assets/backgrounds/clear.gif
+     - assets/icons/tornado.png
+     - assets/icons/thunderstorm.png
+     - assets/icons/squall.png
+     - assets/icons/drizzle.png
+     - assets/icons/clouds.png
+     - assets/icons/snow.png
+     - assets/icons/mist.png
+     - assets/icons/clear.png
+
+
+
+
+
        #   - images/a_dot_ham.jpeg
 
 fonts:
