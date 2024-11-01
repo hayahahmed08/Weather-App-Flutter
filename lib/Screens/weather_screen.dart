@@ -2,12 +2,48 @@ import 'package:flutter/material.dart';
 import 'package:weatherapp/Services/weather_services.dart';
 import 'package:weatherapp/Model/model_class.dart';
 import 'package:intl/intl.dart';
-im
+import 'package:weatherapp/Model/forecast_model_class.dart';
 
 class WeatherScreen extends StatelessWidget {
   final String cityName;
 
   WeatherScreen({required this.cityName});
+
+  final Map<String, String> weatherImages = {
+    "Thunderstorm": "assets/backgrounds/clear.gif",
+    "Drizzle": "assets/backgrounds/clear.gif",
+    "Rain": "assets/backgrounds/clear.gif",
+    "Snow": "assets/backgrounds/clear.gif",
+    "Mist": "assets/backgrounds/clear.gif",
+    "Smoke": "assets/backgrounds/clear.gif",
+    "Haze": "assets/backgrounds/clear.gif",
+    "Dust": "assets/backgrounds/clear.gif",
+    "Fog": "assets/backgrounds/clear.gif",
+    "Sand": "assets/backgrounds/clear.gif",
+    "Ash": "assets/backgrounds/clear.gif",
+    "Squall": "assets/backgrounds/clear.gif",
+    "Tornado": "assets/backgrounds/clear.gif",
+    "Clear": "assets/backgrounds/clear.gif",
+    "Clouds": "assets/backgrounds/clear.gif",
+  };
+
+  final Map<String, String> weatherIcons = {
+    "Thunderstorm": "assets/icons/thunderstorm.png",
+    "Drizzle": "assets/icons/drizzle.png",
+    "Rain": "assets/icons/drizzle.png",
+    "Snow": "assets/icons/snow.png",
+    "Mist": "assets/icons/mist.png",
+    "Smoke": "assets/icons/mist.png",
+    "Haze": "assets/icons/mist.png",
+    "Dust": "assets/icons/mist.png",
+    "Fog": "assets/icons/mist.png",
+    "Sand": "assets/icons/mist.png",
+    "Ash": "assets/icons/mist.png",
+    "Squall": "assets/icons/squall.png",
+    "Tornado": "assets/icons/tornado.png",
+    "Clear": "assets/icons/clear.png",
+    "Clouds": "assets/icons/clouds.png",
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +60,8 @@ class WeatherScreen extends StatelessWidget {
           } else {
             final weatherData = snapshot.data!;
             final mainWeather = weatherData.weather![0].main;
-
-
-
             final backgroundImage =
                 weatherImages[mainWeather] ?? 'assets/backgrounds/clear.gif';
-
             final weatherIcon =
                 weatherIcons[mainWeather] ?? 'assets/icons/tornado.png';
 
@@ -40,15 +72,6 @@ class WeatherScreen extends StatelessWidget {
             final now = DateTime.now().toUtc().add(Duration(seconds: time));
             final formattedDate = DateFormat('dd MMM yyyy').format(now);
             final dayName = DateFormat('EEEE').format(now);
-
-            // Generate the dates for the next 5 days
-            List<DateTime> nextFiveDays = [
-              now.add(Duration(days: 1)),
-              now.add(Duration(days: 2)),
-              now.add(Duration(days: 3)),
-              now.add(Duration(days: 4)),
-              now.add(Duration(days: 5)),
-            ];
 
             return Stack(
               children: [
@@ -118,23 +141,73 @@ class WeatherScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 30),
+                        FutureBuilder<Forecast?>(
+                          future: weatherServices.fetchForecast(cityName),
+                          builder: (context, forecastSnapshot) {
+                            if (forecastSnapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (forecastSnapshot.hasError ||
+                                forecastSnapshot.data == null) {
+                              return const Text(
+                                "Error fetching forecast data",
+                                style: TextStyle(color: Colors.white),
+                              );
+                            } else {
+                              final forecastData = forecastSnapshot.data!;
+                              return SizedBox(
+                                height:
+                                    100, // Set height for horizontal list items
+                                child: ListView.builder(
+                                  scrollDirection:
+                                      Axis.horizontal, // Set to horizontal
+                                  itemCount: forecastData.list?.length ?? 0,
+                                  itemBuilder: (context, index) {
+                                    final dailyForecast =
+                                        forecastData.list![index];
+                                    final forecastTempInKelvin =
+                                        dailyForecast.main?.temp ?? 0;
+                                    final forecastTempInCelsius =
+                                        (forecastTempInKelvin - 273).toInt();
+                                    final forecastDay =
+                                        DateFormat('EEEE').format(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          dailyForecast.dt! * 1000),
+                                    );
 
+                                    return Container(
+                                      width: 80, // Set width for each item
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 8),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          // Icon(Icons.wb_sunny,
+                                          //     color: Colors.white),
+                                          Text(
+                                            forecastDay,
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          Text(
+                                            "${forecastTempInCelsius}°C",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            }
+                          },
+                        ),
                       ],
                     ),
                   ),
                 ),
-                ListView.builder(
-                  itemCount: nextFiveDays.length,
-                  itemBuilder: (BuildContext context , int index){
-                    DateTime day = nextFiveDays[index];
-                    String dayName = DateFormat('EEE').format(day);
-
-                    return Container(
-
-
-                    )
-                  },
-                )
               ],
             );
           }
@@ -143,41 +216,3 @@ class WeatherScreen extends StatelessWidget {
     );
   }
 }
-
-
-
-final Map<String, String> weatherImages = {
-  "Thunderstorm": "assets/backgrounds/thunderstorm.gif",
-  "Drizzle": "assets/backgrounds/drizzle.gif",
-  "Rain": "assets/backgrounds/rain.gif",
-  "Snow": "assets/backgrounds/snow.gif",
-  "Mist": "assets/backgrounds/mist.gif",
-  "Smoke": "assets/backgrounds/smoke.gif",
-  "Haze": "assets/backgrounds/haze.gif",
-  "Dust": "assets/backgrounds/dust.gif",
-  "Fog": "assets/backgrounds/fog.gif",
-  "Sand": "assets/backgrounds/sand.gif",
-  "Ash": "assets/backgrounds/ash.gif",
-  "Squall": "assets/backgrounds/squall.gif",
-  "Tornado": "assets/backgrounds/tornado.gif",
-  "Clear": "assets/backgrounds/clear.gif",
-  "Clouds": "assets/backgrounds/clouds.gif",
-};
-
-final Map<String, String> weatherIcons = {
-  "Thunderstorm": "assets/icons/thunderstorm.png",
-  "Drizzle": "assets/icons/drizzle.png",
-  "Rain": "assets/icons/rain.png",
-  "Snow": "assets/icons/snow.png",
-  "Mist": "assets/icons/mist.png",
-  "Smoke": "assets/icons/smoke.png",
-  "Haze": "assets/icons/haze.png",
-  "Dust": "assets/icons/dust.png",
-  "Fog": "assets/icons/fog.png",
-  "Sand": "assets/icons/sand.png",
-  "Ash": "assets/icons/ash.png",
-  "Squall": "assets/icons/squall.png",
-  "Tornado": "assets/icons/tornado.png",
-  "Clear": "assets/icons/clear.png",
-  "Clouds": "assets/icons/clouds.png",
-};
