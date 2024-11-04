@@ -1,16 +1,21 @@
 class AppUrl {
   // Base URL for the OpenWeatherMap API
-  static const String baseUrl = "https://api.openweathermap.org/data/2.5/";
+  static const String openWeatherBaseUrl = "https://api.openweathermap.org/data/2.5/";
 
-  // Replace {cityName} with the city name of your choice and add your actual API key here
+  // Open-Meteo URL for forecast (use coordinates directly)
+  static const String openMeteoForecastUrl = "https://api.open-meteo.com/v1/forecast";
+
+  // API key for OpenWeatherMap (replace with your own)
   static const String apiKey = "14dfa869afcd21482222a7e0a94e83dd";
 
-  // Fetch weather data by city name
+  // Fetch current weather data by city name (OpenWeatherMap)
   static String weatherByCity(String cityName) {
-    return "$baseUrl/weather?q=$cityName&appid=$apiKey";
+    return "$openWeatherBaseUrl/weather?q=$cityName&appid=$apiKey";
   }
 
-  static String forecastbyCity(String cityName){
-      return "$baseUrl/forecast?q=$cityName&appid=$apiKey";
+
+  // Fetch forecast for specific coordinates using Open-Meteo
+  static String forecastByCoordinates(double latitude, double longitude) {
+    return "$openMeteoForecastUrl?latitude=$latitude&longitude=$longitude&daily=temperature_2m_max,temperature_2m_min&timezone=auto";
   }
 }

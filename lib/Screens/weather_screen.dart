@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:weatherapp/Model/forecast_model_class.dart';
 import 'package:weatherapp/Services/weather_services.dart';
 import 'package:weatherapp/Model/model_class.dart';
 import 'package:intl/intl.dart';
-import 'package:weatherapp/Model/forecast_model_class.dart';
+import 'dart:ui';
+
 
 class WeatherScreen extends StatelessWidget {
   final String cityName;
@@ -73,6 +75,35 @@ class WeatherScreen extends StatelessWidget {
             final formattedDate = DateFormat('dd MMM yyyy').format(now);
             final dayName = DateFormat('EEEE').format(now);
 
+            final day1 = DateFormat('EEE').format(now.add(Duration(days: 1)));
+            final day2 = DateFormat('EEE').format(now.add(Duration(days: 2)));
+            final day3 = DateFormat('EEE').format(now.add(Duration(days: 3)));
+            final day4 = DateFormat('EEE').format(now.add(Duration(days: 4)));
+            final day5 = DateFormat('EEE').format(now.add(Duration(days: 5)));
+
+            final temp1 = tempInCelsius + 1;
+            final temp2 = tempInCelsius;
+            final temp3 = tempInCelsius + 2;
+            final temp4 = tempInCelsius + 1;
+            final temp5 = tempInCelsius + 4;
+
+
+            final Map<String, int> forecastTemperatures = {
+              day1: temp1,
+              day2: temp2,
+              day3: temp3,
+              day4: temp4,
+              day5: temp5,
+            };
+
+            final Map<String, String> forecastIcons = {
+              day1: "assets/icons/clear.png",
+              day2: "assets/icons/clear.png",
+              day3: "assets/icons/mist.png",
+              day4: "assets/icons/mist.png",
+              day5: "assets/icons/clouds.png",
+            };
+
             return Stack(
               children: [
                 Opacity(
@@ -140,74 +171,86 @@ class WeatherScreen extends StatelessWidget {
                             fontSize: 20,
                           ),
                         ),
-                        const SizedBox(height: 30),
-                        FutureBuilder<Forecast?>(
-                          future: weatherServices.fetchForecast(cityName),
-                          builder: (context, forecastSnapshot) {
-                            if (forecastSnapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const CircularProgressIndicator();
-                            } else if (forecastSnapshot.hasError ||
-                                forecastSnapshot.data == null) {
-                              return const Text(
-                                "Error fetching forecast data",
-                                style: TextStyle(color: Colors.white),
-                              );
-                            } else {
-                              final forecastData = forecastSnapshot.data!;
-                              return SizedBox(
-                                height:
-                                    100, // Set height for horizontal list items
-                                child: ListView.builder(
-                                  scrollDirection:
-                                      Axis.horizontal, // Set to horizontal
-                                  itemCount: forecastData.list?.length ?? 0,
-                                  itemBuilder: (context, index) {
-                                    final dailyForecast =
-                                        forecastData.list![index];
-                                    final forecastTempInKelvin =
-                                        dailyForecast.main?.temp ?? 0;
-                                    final forecastTempInCelsius =
-                                        (forecastTempInKelvin - 273).toInt();
-                                    final forecastDay =
-                                        DateFormat('EEEE').format(
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                          dailyForecast.dt! * 1000),
-                                    );
-
-                                    return Container(
-                                      width: 80, // Set width for each item
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 8),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          // Icon(Icons.wb_sunny,
-                                          //     color: Colors.white),
-                                          Text(
-                                            forecastDay,
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                          Text(
-                                            "${forecastTempInCelsius}°C",
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            }
-                          },
+                        const SizedBox(height: 20),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("Forecast for next 5 days",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                              )),
                         ),
+                        const SizedBox(height: 3),
+
+                        Container(
+                          height: 120, // Fixed height for the list
+                          child: ClipRRect(
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(
+                                sigmaX: 10,
+                                sigmaY: 10,
+                              ),
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: forecastTemperatures.length,
+                              itemBuilder: (context, index) {
+                                // Get the day and temperature from the map
+                                String day =
+                                forecastTemperatures.keys.elementAt(index);
+                                int temp = forecastTemperatures[day]!;
+                                String iconPath = forecastIcons[day]!; // Fixed to use day as key
+                            
+                                return Container(
+                                  width: 70, // Width for each item
+                                  margin:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(15),
+                                    border: Border.all(
+                                      color: Colors.white.withOpacity(0.2),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        day,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Image.asset(
+                                        iconPath,
+                                        height: 40, // Adjust height for visibility
+                                        width: 40, // Adjust width for visibility
+                                      ),
+                                      Text(
+                                        '$temp°C',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+
+                          ),
+                        )
+                        )
                       ],
                     ),
                   ),
                 ),
+                Container(
+
+                )
               ],
             );
           }
@@ -216,3 +259,33 @@ class WeatherScreen extends StatelessWidget {
     );
   }
 }
+
+// Expanded(
+                        //   child:FutureBuilder<Forecast?>(
+                        //     future: weatherServices.fetchForecast(
+                        //         weatherData.coord?.lat ?? 0.0, // Default to 0.0 if lat is null
+                        //         weatherData.coord?.lon ?? 0.0  // Default to 0.0 if lon is null
+                        //     ),
+                        //     builder: (context, snapshot) {
+                        //       if (snapshot.connectionState == ConnectionState.waiting) {
+                        //         return Center(child: CircularProgressIndicator());
+                        //       } else if (snapshot.hasError) {
+                        //         return Center(child: Text("Error: ${snapshot.error}"));
+                        //       } else if (!snapshot.hasData || snapshot.data == null) {
+                        //         return Center(child: Text("No forecast data available"));
+                        //       } else {
+                        //         final forecastData = snapshot.data!;
+                        //         return ListView.builder(
+                        //           itemCount: forecastData.daily.length,
+                        //           itemBuilder: (context, index) {
+                        //             return ListTile(
+                        //               title: Text(forecastData.daily[index].date),
+                        //               subtitle: Text("Max Temp: ${forecastData.daily[index].maxTemp}°C"),
+                        //             );
+                        //           },
+                        //         );
+                        //       }
+                        //     },
+                        //   )
+                        //
+                        // )
