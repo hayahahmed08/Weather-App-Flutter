@@ -5,7 +5,6 @@ import 'package:weatherapp/Model/model_class.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui';
 
-
 class WeatherScreen extends StatelessWidget {
   final String cityName;
 
@@ -87,7 +86,6 @@ class WeatherScreen extends StatelessWidget {
             final temp4 = tempInCelsius + 1;
             final temp5 = tempInCelsius + 4;
 
-
             final Map<String, int> forecastTemperatures = {
               day1: temp1,
               day2: temp2,
@@ -165,23 +163,22 @@ class WeatherScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "${dayName} | ${formattedDate}",
+                          "$dayName | $formattedDate",
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
                           ),
                         ),
                         const SizedBox(height: 20),
-                        Align(
+                        const Align(
                           alignment: Alignment.centerLeft,
                           child: Text("Forecast for next 5 days",
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,
                               )),
                         ),
                         const SizedBox(height: 3),
-
                         Container(
                           height: 120, // Fixed height for the list
                           child: ClipRRect(
@@ -190,67 +187,102 @@ class WeatherScreen extends StatelessWidget {
                                 sigmaX: 10,
                                 sigmaY: 10,
                               ),
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: forecastTemperatures.length,
-                              itemBuilder: (context, index) {
-                                // Get the day and temperature from the map
-                                String day =
-                                forecastTemperatures.keys.elementAt(index);
-                                int temp = forecastTemperatures[day]!;
-                                String iconPath = forecastIcons[day]!; // Fixed to use day as key
-                            
-                                return Container(
-                                  width: 70, // Width for each item
-                                  margin:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(15),
-                                    border: Border.all(
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: forecastTemperatures.length,
+                                itemBuilder: (context, index) {
+                                  // Get the day and temperature from the map
+                                  String day =
+                                  forecastTemperatures.keys.elementAt(index);
+                                  int temp = forecastTemperatures[day]!;
+                                  String iconPath = forecastIcons[day]!;
+
+                                  return Container(
+                                    width: 70, // Width for each item
+                                    margin:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                    decoration: BoxDecoration(
                                       color: Colors.white.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(15),
+                                      border: Border.all(
+                                        color: Colors.white.withOpacity(0.2),
+                                      ),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          day,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Image.asset(
+                                          iconPath,
+                                          height: 40,
+                                          width: 40,
+                                        ),
+                                        Text(
+                                          '$temp°C',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+
+                                      ],
+
+                                    ),
+
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20), // Space between sections
+
+                        // Four additional glassmorphic containers
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: List.generate(4, (index) {
+                            return Container(
+                              width: 70,
+                              height: 70,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.2),
+                                ),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: BackdropFilter(
+                                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                  child: Center(
+                                    child: Text(
+                                      "Info ${index + 1}",
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        day,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 5),
-                                      Image.asset(
-                                        iconPath,
-                                        height: 40, // Adjust height for visibility
-                                        width: 40, // Adjust width for visibility
-                                      ),
-                                      Text(
-                                        '$temp°C',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-
-                          ),
-                        )
-                        )
+                                ),
+                              ),
+                            );
+                          }),
+                        ),
                       ],
+
                     ),
                   ),
                 ),
-                Container(
-
-                )
               ],
             );
           }
