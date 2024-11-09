@@ -39,6 +39,8 @@ dependencies:
   cupertino_icons: ^1.0.6
   http: ^1.2.2
   intl: ^0.19.0
+  flutter_svg: ^2.0.14
+
 
 
 dev_dependencies:
@@ -86,6 +88,13 @@ flutter:
      - assets/icons/snow.png
      - assets/icons/mist.png
      - assets/icons/clear.png
+     - assets/icons/thermometer.svg
+     - assets/icons/humidity.svg
+     - assets/icons/pressure.png
+     - assets/icons/sealevel.png
+     - assets/icons/sealevel1.png
+     - assets/icons/sealevel2.png
+
 
 
 

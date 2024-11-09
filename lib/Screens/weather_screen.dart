@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:weatherapp/Model/forecast_model_class.dart';
 import 'package:weatherapp/Services/weather_services.dart';
 import 'package:weatherapp/Model/model_class.dart';
@@ -66,6 +69,8 @@ class WeatherScreen extends StatelessWidget {
             final weatherIcon =
                 weatherIcons[mainWeather] ?? 'assets/icons/tornado.png';
 
+            final tempfeelslikekelvin = weatherData.main?.feelsLike ?? 0;
+            final tempfeelslikecelsius = (tempfeelslikekelvin - 273).toInt();
             final tempInKelvin = weatherData.main?.temp ?? 0;
             final tempInCelsius = (tempInKelvin - 273).toInt();
 
@@ -132,155 +137,290 @@ class WeatherScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 100),
-                    child: Column(
-                      children: [
-                        Text(
-                          mainWeather!,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontFamily: 'UncialAntiqua-Regular',
-                            fontWeight: FontWeight.normal,
-                          ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 80),
+                  child: Column(
+                    children: [
+                      Text(
+                        mainWeather!,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontFamily: 'UncialAntiqua-Regular',
+                          fontWeight: FontWeight.normal,
                         ),
-                        const SizedBox(height: 5),
-                        Image.asset(
-                          weatherIcon,
-                          height: 120,
-                          width: 120,
+                      ),
+                      const SizedBox(height: 3),
+                      Image.asset(
+                        weatherIcon,
+                        height: 120,
+                        width: 120,
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        "${tempInCelsius}°C",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 60,
+                          fontFamily: 'Roboto-Medium.ttf',
+                          fontWeight: FontWeight.w600,
                         ),
-                        const SizedBox(height: 2),
-                        Text(
-                          "${tempInCelsius}°C",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 70,
-                            fontFamily: 'Roboto-Medium.ttf',
-                            fontWeight: FontWeight.w600,
-                          ),
+                      ),
+                      Text(
+                        "$dayName | $formattedDate",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
                         ),
-                        Text(
-                          "$dayName | $formattedDate",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text("Forecast for next 5 days",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                              )),
-                        ),
-                        const SizedBox(height: 3),
-                        Container(
-                          height: 120, // Fixed height for the list
-                          child: ClipRRect(
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(
-                                sigmaX: 10,
-                                sigmaY: 10,
-                              ),
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: forecastTemperatures.length,
-                                itemBuilder: (context, index) {
-                                  // Get the day and temperature from the map
-                                  String day =
-                                  forecastTemperatures.keys.elementAt(index);
-                                  int temp = forecastTemperatures[day]!;
-                                  String iconPath = forecastIcons[day]!;
+                      ),
+                      const SizedBox(height: 20),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text("  Forecast for next 5 days",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                            )),
+                      ),
+                      const SizedBox(height: 3),
+                      Container(
+                        height: 100, // Fixed height for the list
+                        child: ClipRRect(
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(
+                              sigmaX: 10,
+                              sigmaY: 10,
+                            ),
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: forecastTemperatures.length,
+                              itemBuilder: (context, index) {
+                                // Get the day and temperature from the map
+                                String day = forecastTemperatures.keys
+                                    .elementAt(index);
+                                int temp = forecastTemperatures[day]!;
+                                String iconPath = forecastIcons[day]!;
 
-                                  return Container(
-                                    width: 70, // Width for each item
-                                    margin:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.2),
-                                      borderRadius: BorderRadius.circular(15),
-                                      border: Border.all(
-                                        color: Colors.white.withOpacity(0.2),
+                                return Container(
+                                  width: 60, // Width for each item
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        day,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          day,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                      const SizedBox(height: 5),
+                                      Image.asset(
+                                        iconPath,
+                                        height: 40,
+                                        width: 40,
+                                      ),
+                                      Text(
+                                        '$temp°C',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
                                         ),
-                                        const SizedBox(height: 5),
-                                        Image.asset(
-                                          iconPath,
-                                          height: 40,
-                                          width: 40,
-                                        ),
-                                        Text(
-                                          '$temp°C',
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-
-                                      ],
-
-                                    ),
-
-                                  );
-                                },
-                              ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20), // Space between sections
-
-                        // Four additional glassmorphic containers
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: List.generate(4, (index) {
-                            return Container(
-                              width: 70,
-                              height: 70,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(15),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.2),
-                                ),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(15),
-                                child: BackdropFilter(
-                                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                                  child: Center(
-                                    child: Text(
-                                      "Info ${index + 1}",
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 20),
+                            child: Container(
+                              height: 100,
+                              width: 130,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    "Feels like",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: "Serif",
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
                                     ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  SvgPicture.asset(
+                                    "assets/icons/thermometer.svg",
+                                    height: 40,
+                                    width: 40,
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    "$tempfeelslikecelsius°C",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: "Serif",
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 20),
+                                child: Container(
+                                  height: 100,
+                                  width: 130,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        "Humidity",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: "Serif",
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      SvgPicture.asset(
+                                        "assets/icons/humidity.svg",
+                                        height: 40,
+                                        width: 40,
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Text(
+                                        "${weatherData.main?.humidity ?? 0}%",
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: "Serif",
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                            );
-                          }),
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 20),
+                            child: Container(
+                              height: 100,
+                              width: 130,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    "Pressure",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: "Serif",
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Image.asset(
+                                    "assets/icons/pressure.png",
+                                    height: 40,
+                                    width: 40,
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    "${weatherData.main?.pressure}hPa",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: "Serif",
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
-                    ),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 20),
+                                child: Container(
+                                  height: 100,
+                                  width: 130,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        "Sea Level",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: "Serif",
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Image.asset(
+                                        "assets/icons/sealevel2.png",
+                                        height: 40,
+                                        width: 40,
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Text(
+                                        "${weatherData.main?.seaLevel ?? 0}hPa",
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: "Serif",
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+
+                    ],
                   ),
                 ),
               ],
@@ -292,32 +432,271 @@ class WeatherScreen extends StatelessWidget {
   }
 }
 
+// Row(
+//   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//     children: [
+//   Padding(
+//     padding: const EdgeInsets.symmetric(
+//         vertical: 10, horizontal: 20),
+//     child: Container(
+//         height: 90,
+//         width: 90,
+//         child: ClipRRect(
+//           borderRadius: BorderRadius.circular(15),
+//           child: BackdropFilter(
+//             filter: ImageFilter.blur(
+//               sigmaX: 10,
+//               sigmaY: 10,
+//             ),
+//             child: Container(
+//                 decoration: BoxDecoration(
+//                  // color: Colors.white.withOpacity(0.2),
+//                   borderRadius:
+//                       BorderRadius.circular(15),
+//                   border: Border.all(
+//                     color:
+//                         Colors.white.withOpacity(0.2),
+//                   ),
+//                 ),
+//                 child: Column(
+//                     mainAxisAlignment: MainAxisAlignment.center,
+//                     crossAxisAlignment: CrossAxisAlignment.center,
+//
+//                     children: [
+//                       Text(
+//                         "Feels like",
+//                         style: TextStyle(
+//                           color: Colors.white,
+//                           fontFamily: "Serif",
+//                           fontSize: 15,
+//                           fontWeight:
+//                               FontWeight.bold,
+//                         ),
+//                       ),
+//                       const SizedBox(height: 5),
+//                       SvgPicture.asset(
+//                           "assets/icons/thermometer.svg",
+//                           height: 40,
+//                           width: 40),
+//                       Text(
+//                         '${tempfeelslikecelsius}°C',
+//                         style: TextStyle(
+//                           color: Colors.white,
+//                           fontFamily: "Serif",
+//                           fontSize: 18,
+//                           fontWeight:
+//                               FontWeight.bold,
+//                         ),
+//                       ),
+//                     ])),
+//           ),
+//         )),
+//   ),
+//
+//       Padding(
+//         padding: const EdgeInsets.symmetric(
+//             vertical: 10, horizontal: 20),
+//         child: Container(
+//             height: 90,
+//             width: 150,
+//             child: ClipRRect(
+//               borderRadius: BorderRadius.circular(15),
+//               child: BackdropFilter(
+//                 filter: ImageFilter.blur(
+//                   sigmaX: 10,
+//                   sigmaY: 10,
+//                 ),
+//                 child: Container(
+//                     decoration: BoxDecoration(
+//                       color: Colors.white.withOpacity(0.2),
+//                       borderRadius:
+//                       BorderRadius.circular(15),
+//                       border: Border.all(
+//                         color:
+//                         Colors.white.withOpacity(0.2),
+//                       ),
+//                     ),
+//                     child: Column(
+//                       mainAxisAlignment: MainAxisAlignment.center,
+//                         crossAxisAlignment: CrossAxisAlignment.center,
+//                         children: [
+//                           Text(
+//                             "Humidity",
+//                             style: TextStyle(
+//                               color: Colors.white,
+//                               fontFamily: "Serif",
+//                               fontSize: 15,
+//                               fontWeight:
+//                               FontWeight.bold,
+//                             ),
+//                           ),
+//
+//                           SvgPicture.asset(
+//                               "assets/icons/humidity.svg",
+//                               height: 45,
+//                               width: 100),
+//                           Text(
+//                             '${weatherData.main?.humidity}%',
+//                             style: TextStyle(
+//                               color: Colors.white,
+//                               fontFamily: "Serif",
+//                               fontSize: 18,
+//                               fontWeight:
+//                               FontWeight.bold,
+//                             ),
+//                           ),
+//                         ])),
+//               ),
+//             )),
+//       ),
+//
+// ]),
+// Row(
+//     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//     children: [
+//       Padding(
+//         padding: const EdgeInsets.symmetric(
+//             vertical: 10, horizontal: 20),
+//         child: Container(
+//             height: 90,
+//             width: 150,
+//             child: ClipRRect(
+//               borderRadius: BorderRadius.circular(15),
+//               child: BackdropFilter(
+//                 filter: ImageFilter.blur(
+//                   sigmaX: 10,
+//                   sigmaY: 10,
+//                 ),
+//                 child: Container(
+//                     decoration: BoxDecoration(
+//                       color: Colors.white.withOpacity(0.2),
+//                       borderRadius:
+//                       BorderRadius.circular(15),
+//                       border: Border.all(
+//                         color:
+//                         Colors.white.withOpacity(0.2),
+//                       ),
+//                     ),
+//                     child: Column(
+//                         mainAxisAlignment: MainAxisAlignment.center,
+//                         crossAxisAlignment: CrossAxisAlignment.center,
+//
+//                         children: [
+//                           Text(
+//                             "Feels like",
+//                             style: TextStyle(
+//                               color: Colors.white,
+//                               fontFamily: "Serif",
+//                               fontSize: 15,
+//                               fontWeight:
+//                               FontWeight.bold,
+//                             ),
+//                           ),
+//                           const SizedBox(height: 5),
+//                           SvgPicture.asset(
+//                               "assets/icons/thermometer.svg",
+//                               height: 40,
+//                               width: 40),
+//                           Text(
+//                             '${tempfeelslikecelsius}°C',
+//                             style: TextStyle(
+//                               color: Colors.white,
+//                               fontFamily: "Serif",
+//                               fontSize: 18,
+//                               fontWeight:
+//                               FontWeight.bold,
+//                             ),
+//                           ),
+//                         ])),
+//               ),
+//             )),
+//       ),
+//
+//       Padding(
+//         padding: const EdgeInsets.symmetric(
+//             vertical: 10, horizontal: 20),
+//         child: Container(
+//             height: 90,
+//             width: 150,
+//             child: ClipRRect(
+//               borderRadius: BorderRadius.circular(15),
+//               child: BackdropFilter(
+//                 filter: ImageFilter.blur(
+//                   sigmaX: 10,
+//                   sigmaY: 10,
+//                 ),
+//                 child: Container(
+//                     decoration: BoxDecoration(
+//                       color: Colors.white.withOpacity(0.2),
+//                       borderRadius:
+//                       BorderRadius.circular(15),
+//                       border: Border.all(
+//                         color:
+//                         Colors.white.withOpacity(0.2),
+//                       ),
+//                     ),
+//                     child: Column(
+//                         mainAxisAlignment: MainAxisAlignment.center,
+//                         crossAxisAlignment: CrossAxisAlignment.center,
+//                         children: [
+//                           Text(
+//                             "Humidity",
+//                             style: TextStyle(
+//                               color: Colors.white,
+//                               fontFamily: "Serif",
+//                               fontSize: 15,
+//                               fontWeight:
+//                               FontWeight.bold,
+//                             ),
+//                           ),
+//
+//                           SvgPicture.asset(
+//                               "assets/icons/humidity.svg",
+//                               height: 45,
+//                               width: 100),
+//                           Text(
+//                             '${weatherData.main?.humidity}%',
+//                             style: TextStyle(
+//                               color: Colors.white,
+//                               fontFamily: "Serif",
+//                               fontSize: 18,
+//                               fontWeight:
+//                               FontWeight.bold,
+//                             ),
+//                           ),
+//                         ])),
+//               ),
+//             )),
+//       ),
+//
+//     ]),
+
 // Expanded(
-                        //   child:FutureBuilder<Forecast?>(
-                        //     future: weatherServices.fetchForecast(
-                        //         weatherData.coord?.lat ?? 0.0, // Default to 0.0 if lat is null
-                        //         weatherData.coord?.lon ?? 0.0  // Default to 0.0 if lon is null
-                        //     ),
-                        //     builder: (context, snapshot) {
-                        //       if (snapshot.connectionState == ConnectionState.waiting) {
-                        //         return Center(child: CircularProgressIndicator());
-                        //       } else if (snapshot.hasError) {
-                        //         return Center(child: Text("Error: ${snapshot.error}"));
-                        //       } else if (!snapshot.hasData || snapshot.data == null) {
-                        //         return Center(child: Text("No forecast data available"));
-                        //       } else {
-                        //         final forecastData = snapshot.data!;
-                        //         return ListView.builder(
-                        //           itemCount: forecastData.daily.length,
-                        //           itemBuilder: (context, index) {
-                        //             return ListTile(
-                        //               title: Text(forecastData.daily[index].date),
-                        //               subtitle: Text("Max Temp: ${forecastData.daily[index].maxTemp}°C"),
-                        //             );
-                        //           },
-                        //         );
-                        //       }
-                        //     },
-                        //   )
-                        //
-                        // )
+//   child:FutureBuilder<Forecast?>(
+//     future: weatherServices.fetchForecast(
+//         weatherData.coord?.lat ?? 0.0, // Default to 0.0 if lat is null
+//         weatherData.coord?.lon ?? 0.0  // Default to 0.0 if lon is null
+//     ),
+//     builder: (context, snapshot) {
+//       if (snapshot.connectionState == ConnectionState.waiting) {
+//         return Center(child: CircularProgressIndicator());
+//       } else if (snapshot.hasError) {
+//         return Center(child: Text("Error: ${snapshot.error}"));
+//       } else if (!snapshot.hasData || snapshot.data == null) {
+//         return Center(child: Text("No forecast data available"));
+//       } else {
+//         final forecastData = snapshot.data!;
+//         return ListView.builder(
+//           itemCount: forecastData.daily.length,
+//           itemBuilder: (context, index) {
+//             return ListTile(
+//               title: Text(forecastData.daily[index].date),
+//               subtitle: Text("Max Temp: ${forecastData.daily[index].maxTemp}°C"),
+//             );
+//           },
+//         );
+//       }
+//     },
+//   )
+//
+// )
